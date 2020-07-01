@@ -29,17 +29,18 @@ public class TodoItemsRepository implements TodoItems {
         if (todo.getTodo_id() != 0)
             throw new IllegalArgumentException("use update instead");
         Todo persisted = null;
+        ResultSet keySet = null;
         try(Connection connection = MyDataSource.getCollection();
             PreparedStatement statement = connection.prepareStatement(CREATE_TODO, Statement.RETURN_GENERATED_KEYS);
-            ResultSet keySet = statement.getGeneratedKeys()){
+            ){
             statement.setString(1, todo.getTitle());
             statement.setString(2, todo.getDescription());
             statement.setObject(3, todo.getDeadline());
             statement.setBoolean(4, todo.isDone());
             statement.setInt(5, todo.getAssignee_id());
 
-            statement.execute();
-
+            statement.executeUpdate();
+            keySet = statement.getGeneratedKeys();
             while(keySet.next()){
                 persisted = new Todo(
                         keySet.getInt(1),
@@ -53,6 +54,14 @@ public class TodoItemsRepository implements TodoItems {
 
         }catch(SQLException e){
             e.printStackTrace();
+        }finally{
+            try{
+                if (keySet != null){
+                    keySet.close();
+                }
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
         }
 
         return persisted == null ? todo : persisted ;
@@ -82,8 +91,10 @@ public class TodoItemsRepository implements TodoItems {
         try(Connection connection = MyDataSource.getCollection();
             PreparedStatement statement = createFindByIdStatement(connection, FIND_BY_ID, todoId);
             ResultSet resultSet = statement.executeQuery()){
+            while(resultSet.next()){
+                target = createTodoFromResultSet(resultSet);
+            }
 
-          target = createTodoFromResultSet(resultSet);
         }catch (SQLException e){
             e.printStackTrace();
         }

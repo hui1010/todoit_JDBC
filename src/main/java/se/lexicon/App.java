@@ -23,10 +23,14 @@ public class App {
         pr.create(new Person("Emil", "Carlsson"));
 
         pr.deleteById(3);//works well
-        //System.out.println(pr.findByName("Huiyi"));//error and exceptions
+        //System.out.println(pr.findByName("Huiyi"));
+        //System.out.println(pr.findById(7)); //start before of result set
+        //System.out.println(pr.findAll());
+
+
 
         TodoItemsRepository tr = new TodoItemsRepository();
-        tr.create(new Todo("cleaning", "clean the classroom", LocalDate.parse("2020-02-01"), false));
-        tr.create(new Todo("shopping", "buy milk", LocalDate.parse("2020-02-01"), false));
+        tr.create(new Todo("cleaning", "clean the classroom", LocalDate.parse("2020-02-01"), false, 5));
+        tr.create(new Todo("shopping", "buy milk", LocalDate.parse("2020-02-01"), false, 10));
     }
 }

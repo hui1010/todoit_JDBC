@@ -82,7 +82,7 @@ public class PeopleRepository implements People {
     }
 
 
-    public static final String FIND_BY_ID = "SELECT * FROM person WHERE person_id = ?";
+    private static final String FIND_BY_ID = "SELECT * FROM person WHERE person_id = ?";
     @Override
     public Person findById(int personId) {
         if (personId <= 0)
@@ -93,7 +93,10 @@ public class PeopleRepository implements People {
             PreparedStatement statement = createFindByIdStatement(connection, FIND_BY_ID, personId);
             ResultSet resultSet = statement.executeQuery()) {
 
-            target = createPersonFromResultSet(resultSet);
+            while(resultSet.next()){
+                target = createPersonFromResultSet(resultSet);
+            }
+
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -107,9 +110,7 @@ public class PeopleRepository implements People {
     }
 
 
-    public static final String FIND_BY_NAME_LIKE = "SELECT * FROM person WHERE first_name LIKE ? " +
-            "OR last_name LIKE ? " +
-            "OR first_name +' ' + last_name LIKE ?";
+    private static final String FIND_BY_NAME_LIKE = "SELECT * FROM person WHERE first_name LIKE ? " ;
     @Override
     public Collection<Person> findByName(String name) {
         Collection<Person> result = new ArrayList<>();
@@ -134,7 +135,7 @@ public class PeopleRepository implements People {
         return statement;
     }
 
-    public static final String UPDATE_PERSON = "UPDATE person SET first_name = ?, last_name = ? WHERE person_id = ?";
+    private static final String UPDATE_PERSON = "UPDATE person SET first_name = ?, last_name = ? WHERE person_id = ?";
     @Override
     public Person update(Person person) {
         if (person.getPerson_id() == 0)
@@ -154,7 +155,7 @@ public class PeopleRepository implements People {
         return person;
     }
 
-    public static final String DELETE_PERSON = "DELETE FROM person WHERE person_id = ?";
+    private static final String DELETE_PERSON = "DELETE FROM person WHERE person_id = ?";
     @Override
     public boolean deleteById(int personId) {
         boolean delete = false;
