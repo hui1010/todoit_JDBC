@@ -5,7 +5,6 @@ import se.lexicon.model.Person;
 import se.lexicon.model.Todo;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,12 +16,13 @@ public class TodoItemsRepository implements TodoItems {
                 resultSet.getString("title"),
                 resultSet.getString("description"),
                 resultSet.getDate("deadline").toLocalDate(),
+                // resultSet.getObject("deadline", LocalDate.class), also works
                 resultSet.getBoolean("done"),
                 resultSet.getInt("assignee_id")
         );
     }
 
-    private static final String CREATE_TODO = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) " +
+    public static final String CREATE_TODO = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) " +
             "VALUES (?,?,?,?,?)";
     @Override
     public Todo create(Todo todo) {
@@ -84,7 +84,7 @@ public class TodoItemsRepository implements TodoItems {
         return result;
     }
 
-    private static final String FIND_BY_ID = "SELECT * FROM todo_item WHERE todo_id = ?";
+    public static final String FIND_BY_ID = "SELECT * FROM todo_item WHERE todo_id = ?";
     @Override
     public Todo findById(int todoId) {
         Todo target = null;
@@ -107,7 +107,7 @@ public class TodoItemsRepository implements TodoItems {
         return statement;
     }
 
-    private static final String FIND_BY_DONE_STATUS = "SELECT * FROM todo_item WHERE done = ?";
+    public static final String FIND_BY_DONE_STATUS = "SELECT * FROM todo_item WHERE done = ?";
     @Override
     public Collection<Todo> findByDoneStatus(boolean status) {
         Collection<Todo> result = new ArrayList<>();
@@ -131,7 +131,7 @@ public class TodoItemsRepository implements TodoItems {
         return statement;
     }
 
-    private static final String FIND_BY_ASSIGNEE = "SELECT * FROM todo_item WHERE assignee_id = ?";
+    public static final String FIND_BY_ASSIGNEE = "SELECT * FROM todo_item WHERE assignee_id = ?";
     @Override
     public Collection<Todo> findByAssignee(int assigneeId) {
         Collection<Todo> result = new ArrayList<>();
@@ -178,7 +178,7 @@ public class TodoItemsRepository implements TodoItems {
         return statement;
     }
 
-    private static final String FIND_BY_UNASSIGNED_TODO_ITEMS = "SELECT * FROM todo_item WHERE assignee_id = 0";
+    public static final String FIND_BY_UNASSIGNED_TODO_ITEMS = "SELECT * FROM todo_item WHERE assignee_id = 0";
     @Override
     public Collection<Todo> findByUnassignedTodoItems() {
         Collection<Todo> result = new ArrayList<>();
@@ -196,7 +196,7 @@ public class TodoItemsRepository implements TodoItems {
         return result;
     }
 
-    private static final String DELETE_BY_ID = "DELETE FROM todo_item WHERE todo_id = ?";
+    public static final String DELETE_BY_ID = "DELETE FROM todo_item WHERE todo_id = ?";
     @Override
     public boolean deleteById(int todoId) {
         boolean delete = false;

@@ -32,5 +32,6 @@ public class App {
         TodoItemsRepository tr = new TodoItemsRepository();
         tr.create(new Todo("cleaning", "clean the classroom", LocalDate.parse("2020-02-01"), false, 5));
         tr.create(new Todo("shopping", "buy milk", LocalDate.parse("2020-02-01"), false, 10));
+        System.out.println(tr.findById(13));
     }
 }
